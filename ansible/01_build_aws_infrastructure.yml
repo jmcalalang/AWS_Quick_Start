@@ -1,0 +1,23 @@
+# Create a stack, passing in template body using lookup of Jinja2 template, disable rollback if stack creation fails,
+# pass in some parameters to the template, provide tags for resources created
+- name: create a stack, pass in the template body via lookup template
+  cloudformation:
+    stack_name: "calalang-infrastruture-cloudformation"
+    state: present
+    region: us-west-2
+    disable_rollback: false
+    template_body: "{{ lookup('../templates/f5-network-only-2AZ-for-3nic-bigip.template', 'f5-network-only-2AZ-for-3nic-bigip.j2') }}"
+    template_parameters:
+      allowUsageAnalytics: yes
+      application: f5app
+      availabilityZone1: us-west-2a
+      availabilityZone2: us-west-2b
+      bigIpModules: ltm:nominal
+      costcenter: f5costcenter
+      customImageId: OPTIONAL
+      declarationUrl: none
+      environment: f5env
+      group: f5group
+      owner: f5owner
+    tags:
+      Stack: ansible-cloudformations

@@ -1,0 +1,6 @@
+# Create a stack, passing in template body using lookup of Jinja2 template, disable rollback if stack creation fails,
+# pass in some parameters to the template, provide tags for resources created
+- name: delete a stack
+  cloudformation:
+    stack_name: "calalang-infrastruture-cloudformation"
+    state: absent

@@ -1,0 +1,39 @@
+# Create a stack, passing in template body using lookup of Jinja2 template, disable rollback if stack creation fails,
+# pass in some parameters to the template, provide tags for resources created
+- name: create a stack, pass in the template body via lookup template
+  cloudformation:
+    stack_name: "calalang-bigip-cloudformation"
+    state: present
+    region: us-west-2
+    disable_rollback: false
+    template_body: "{{ lookup('../templates/f5-existing-stack-same-az-cluster-bigiq-3nic-bigip.template', 'f5-existing-stack-same-az-cluster-bigiq-3nic-bigip.j2') }}"
+    template_parameters:
+      Vpc: yes
+      managementSubnetAz1: f5app
+      subnet1Az1: us-west-2a
+      subnet2Az1: us-west-2b
+      imageName: AllTwoBootLocations
+      customImageId: OPTIONAL
+      instanceType: m5.xlarge
+      sshKey: calalang_west2.key
+      restrictedSrcAddress: 216.228.179.25/32
+      restrictedSrcAddressApp: 216.228.179.25/32
+      ntpServer: 0.pool.ntp.org
+      timezone: UTC
+      bigIpModules: ltm:nominal,asm:nominal
+      application: f5app
+      environment: f5env
+      group: f5group
+      owner: f5owner
+      costcenter: f5costcenter
+      bigiqAddress: 52.175.205.141
+      bigiqUsername: azureuser
+      bigIqLicenseUnitOfMeasure: monthly
+      bigIqLicenseSkuKeyword1: F5-BIG-MSP-BT-1G
+      bigiqPasswordS3ARN: arn:aws:s3:::calalang-bigiq/bigiq-password
+      bigiqLicensePoolName: F5-BIG-MSP-LOADV4-LIC
+      allowUsageAnalytics: f5owner
+      declarationUrl: none
+      provisionPublicIP: yes
+    tags:
+      Stack: ansible-cloudformations
