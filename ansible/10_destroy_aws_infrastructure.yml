@@ -10,14 +10,16 @@
 
 # Destroy AWS infrastruture cloudformation stack
   tasks:
-    - name: destroy a stack
+    - name: Deploy AWS VPC Environment
       cloudformation:
         stack_name: ""
         state: absent
+
 # Get summary information about a stack
       cloudformation_info:
         stack_name: ""
       register: "InfrastrutureCloudformationOutput"
+      
 # Output the stack information to ~/
     - local_action: 
         copy content={{ InfrastrutureCloudformationOutput }} dest=~/ansible-infrastruture-cloudformation-output.txt

@@ -1,0 +1,51 @@
+{
+    "class": "AS3",
+    "action": "deploy",
+    "persist": true,
+    "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.5.0",
+        "id": "example-declaration-01",
+        "label": "Juice-Shop",
+        "remark": "Simple HTTP application with round robin pool",
+        "JuiceShop": {
+            "class": "Tenant",
+            "defaultRouteDomain": 0,
+            "Application_1": {
+                "class": "Application",
+                "template": "http",
+                "serviceMain": {
+                    "class": "Service_HTTP",
+                    "virtualAddresses": [
+                        "172.16.1.219"
+                    ],
+                    "pool": "poolofjuice"
+                },
+                "poolofjuice": {
+                    "class": "Pool",
+                    "monitors": [
+                        "http"
+                    ],
+                    "members": [
+                        {
+                            "servicePort": 80,
+                            "addressDiscovery": "aws",
+                            "updateInterval": 1,
+                            "tagKey": "porsche",
+                            "tagValue": "panamera",
+                            "addressRealm": "private",
+                            "region": "us-west-2"
+                        },
+                        {
+                            "enable": true,
+                            "servicePort": 80,
+                            "serverAddresses": [
+                                "172.16.2.72"
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

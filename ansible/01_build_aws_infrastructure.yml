@@ -12,7 +12,7 @@
 
 # Launch AWS infrastruture cloudformation stack
   tasks:
-    - name: create a stack, pass in the template via lookup template
+    - name: Deploy AWS VPC Environment
       cloudformation:
         stack_name: ""
         state: present
@@ -33,10 +33,12 @@
           owner: "f5owner"
         tags:
           Stack: ansible-cloudformations
+
 # Get summary information about a stack
       cloudformation_info:
         stack_name: ""
       register: "InfrastrutureCloudformationOutput"
+      
 # Output the stack information to ~/
     - local_action: 
         copy content={{ InfrastrutureCloudformationOutput }} dest=~/ansible-infrastruture-cloudformation-output.txt

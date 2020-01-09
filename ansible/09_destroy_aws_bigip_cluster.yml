@@ -10,14 +10,16 @@
 
 # Destroy AWS bigip cloudformation stack
   tasks:
-    - name: destroy a stack
+    - name: Destroy AWS BIGIP Cluster
       cloudformation:
         stack_name: ""
         state: absent
+
 # Get summary information about a stack
       cloudformation_info:
         stack_name: ""
       register: "BigipCloudformationOutput"
+      
 # Output the stack information to ~/
     - local_action: 
         copy content={{ BigipCloudformationOutput }} dest=~/ansible-bigip-cloudformation-output.txt
