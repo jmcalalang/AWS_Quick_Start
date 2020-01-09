@@ -4,11 +4,11 @@
     "persist": true,
     "declaration": {
         "class": "ADC",
-        "schemaVersion": "3.5.0",
-        "id": "example-declaration-01",
-        "label": "Juice-Shop",
+        "schemaVersion": "3.16.0",
+        "id": "{{ serviceName }}-id",
+        "label": "{{ serviceName }}-label",
         "remark": "Simple HTTP application with round robin pool",
-        "JuiceShop": {
+        "{{ serviceName }}": {
             "class": "Tenant",
             "defaultRouteDomain": 0,
             "Application_1": {
@@ -17,11 +17,11 @@
                 "serviceMain": {
                     "class": "Service_HTTP",
                     "virtualAddresses": [
-                        "172.16.1.219"
+                        "{{ virtualAddresses }}"
                     ],
-                    "pool": "poolofjuice"
+                    "pool": "{{ serviceName }}_pl"
                 },
-                "poolofjuice": {
+                "{{ serviceName }}_pl": {
                     "class": "Pool",
                     "monitors": [
                         "http"
@@ -30,17 +30,20 @@
                         {
                             "servicePort": 80,
                             "addressDiscovery": "aws",
-                            "updateInterval": 1,
-                            "tagKey": "porsche",
-                            "tagValue": "panamera",
-                            "addressRealm": "private",
-                            "region": "us-west-2"
+                            "updateInterval": 10,
+                            "tagKey": "{{ tagKey }}",
+                            "tagValue": "{{ tagValue }}",
+                            "addressRealm": "public",
+                            "region": "us-west-2",
+                            "accessKeyId": "{{ accessKeyId }}",
+                            "secretAccessKey": "{{ secretAccessKey }}",
+                            "credentialUpdate": false
                         },
                         {
                             "enable": true,
                             "servicePort": 80,
                             "serverAddresses": [
-                                "172.16.2.72"
+                                ""
                             ]
                         }
                     ]

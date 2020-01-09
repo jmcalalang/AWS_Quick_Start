@@ -18,6 +18,11 @@
     BIGIPadminPassword: ""
     deviceName1: ""
     serviceName: ""
+    virtualAddresses: ""
+    accessKeyId: ""
+    secretAccessKey: ""
+    tagKey: ""
+    tagValue: ""
 
 # Deploy 
   tasks:
