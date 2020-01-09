@@ -36,7 +36,7 @@
 # Get summary information about a stack
       cloudformation_info:
         stack_name: ""
-      register: "InfrastrutureCloudformationOutput"
+      register: "InfrastructureCloudformationOutput"
 # Output the stack information to ~/
     - local_action: 
-        copy content={{ InfrastrutureCloudformationOutput }} dest=~/ansible-infrastruture-cloudformation-output.txt 
+        copy content={{ InfrastructureCloudformationOutput }} dest=~/ansible-infrastructure-cloudformation-output.txt 
