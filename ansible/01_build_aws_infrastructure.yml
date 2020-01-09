@@ -1,23 +1,42 @@
-# Create a stack, passing in template body using lookup of Jinja2 template, disable rollback if stack creation fails,
-# pass in some parameters to the template, provide tags for resources created
-- name: create a stack, pass in the template body via lookup template
-  cloudformation:
-    stack_name: "calalang-infrastruture-cloudformation"
-    state: present
-    region: us-west-2
-    disable_rollback: false
-    template_body: "{{ lookup('../templates/f5-network-only-2AZ-for-3nic-bigip.template', 'f5-network-only-2AZ-for-3nic-bigip.j2') }}"
-    template_parameters:
-      allowUsageAnalytics: yes
-      application: f5app
-      availabilityZone1: us-west-2a
-      availabilityZone2: us-west-2b
-      bigIpModules: ltm:nominal
-      costcenter: f5costcenter
-      customImageId: OPTIONAL
-      declarationUrl: none
-      environment: f5env
-      group: f5group
-      owner: f5owner
-    tags:
-      Stack: ansible-cloudformations
+# Modules Used
+
+# https://docs.ansible.com/ansible/latest/modules/cloudformation_module.html
+# https://docs.ansible.com/ansible/latest/modules/cloudformation_info_module.html
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_delegation.html 
+---
+
+- name: "Deploy AWS VPC Environment"
+  hosts: localhost
+  gather_facts: False
+  connection: local
+
+# Launch AWS infrastruture cloudformation stack
+  tasks:
+    - name: create a stack, pass in the template via lookup template
+      cloudformation:
+        stack_name: ""
+        state: present
+        region: us-west-2
+        disable_rollback: false
+        template: "~/f5-rs-aws/templates/f5-network-only-2AZ-for-3nic-bigip.template"
+        template_parameters:
+          allowUsageAnalytics: "Yes"
+          application: "f5app"
+          availabilityZone1: "us-west-2a"
+          availabilityZone2: "us-west-2b"
+#         bigIpModules: "ltm:nominal"
+          costcenter: "f5costcenter"
+          customImageId: "OPTIONAL"
+          declarationUrl: "none"
+          environment: "f5env"
+          group: "f5group"
+          owner: "f5owner"
+        tags:
+          Stack: ansible-cloudformations
+# Get summary information about a stack
+      cloudformation_info:
+        stack_name: ""
+      register: "InfrastrutureCloudformationOutput"
+# Output the stack information to ~/
+    - local_action: 
+        copy content={{ InfrastrutureCloudformationOutput }} dest=~/ansible-infrastruture-cloudformation-output.txt

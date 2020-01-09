@@ -1,6 +1,23 @@
-# Create a stack, passing in template body using lookup of Jinja2 template, disable rollback if stack creation fails,
-# pass in some parameters to the template, provide tags for resources created
-- name: delete a stack
-  cloudformation:
-    stack_name: "calalang-bigip-cloudformation"
-    state: absent
+# Modules Used
+
+# https://docs.ansible.com/ansible/latest/modules/cloudformation_module.html
+---
+
+- name: "Destroy AWS BIGIP Cluster"
+  hosts: localhost
+  gather_facts: False
+  connection: local
+
+# Destroy AWS bigip cloudformation stack
+  tasks:
+    - name: destroy a stack
+      cloudformation:
+        stack_name: ""
+        state: absent
+# Get summary information about a stack
+      cloudformation_info:
+        stack_name: ""
+      register: "BigipCloudformationOutput"
+# Output the stack information to ~/
+    - local_action: 
+        copy content={{ BigipCloudformationOutput }} dest=~/ansible-bigip-cloudformation-output.txt
