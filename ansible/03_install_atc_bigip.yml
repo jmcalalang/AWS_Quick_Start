@@ -7,7 +7,7 @@
 ---
 
 #- name: "Deploy AS3 to BIG-IP"
-  hosts: localhost
+- hosts: localhost
   gather_facts: False
   connection: local
 
