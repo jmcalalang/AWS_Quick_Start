@@ -1,20 +1,24 @@
+---
 # Modules Used
 
 # https://docs.ansible.com/ansible/latest/modules/cloudformation_module.html
 # https://docs.ansible.com/ansible/latest/modules/cloudformation_info_module.html
 # https://docs.ansible.com/ansible/latest/user_guide/playbooks_delegation.html 
----
 
-- name: "Deploy AWS BIGIP Cluster"
+# Ansible Information
+- name: Set Ansible Information
   hosts: localhost
   gather_facts: False
   connection: local
+  vars:
+    stack_name: ""
+    #More variables below
 
 # Launch AWS bigip cloudformation stack
   tasks:
     - name: Deploy AWS BIGIP Cluster
       cloudformation:
-        stack_name: ""
+        stack_name: "{{ stack_name }}"
         state: present
         region: us-west-2
         disable_rollback: false
@@ -50,11 +54,11 @@
         tags:
           Stack: ansible-cloudformations
 
-# Get summary information about a stack
+    - name: Get summary information about a stack
       cloudformation_info:
-        stack_name: ""
+        stack_name: "{{ stack_name }}"
       register: "BigipCloudformationOutput"
       
-# Output the stack information to ~/
-    - local_action: 
+    - name: Output the stack information to ~/
+      local_action: 
         copy content={{ BigipCloudformationOutput }} dest=~/ansible-bigip-cloudformation-output.txt

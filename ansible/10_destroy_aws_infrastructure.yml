@@ -1,25 +1,31 @@
+---
 # Modules Used
 
 # https://docs.ansible.com/ansible/latest/modules/cloudformation_module.html
----
+# https://docs.ansible.com/ansible/latest/modules/cloudformation_info_module.html
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_delegation.html 
 
-- name: "Deploy AWS VPC Environment"
+# Ansible Information
+- name: Set Ansible Information
   hosts: localhost
   gather_facts: False
   connection: local
+  vars:
+    stack_name: ""
+    #More variables below
 
 # Destroy AWS infrastruture cloudformation stack
   tasks:
-    - name: Deploy AWS VPC Environment
+    - name: Destroy AWS infrastruture cloudformation stack
       cloudformation:
-        stack_name: ""
+        stack_name: "{{ stack_name }}"
         state: absent
 
-# Get summary information about a stack
+    - name: Get summary information about a stack     
       cloudformation_info:
-        stack_name: ""
-      register: "InfrastrutureCloudformationOutput"
-      
-# Output the stack information to ~/
-    - local_action: 
-        copy content={{ InfrastrutureCloudformationOutput }} dest=~/ansible-infrastruture-cloudformation-output.txt
+        stack_name: "{{ stack_name }}"
+      register: "InfrastructureCloudformationOutput"
+
+    - name: Output the stack information to ~/
+      local_action: 
+        copy content={{ InfrastructureCloudformationOutput }} dest=~/ansible-infrastructure-cloudformation-output.txt 

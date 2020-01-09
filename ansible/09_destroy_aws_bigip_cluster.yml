@@ -1,25 +1,31 @@
+---
 # Modules Used
 
 # https://docs.ansible.com/ansible/latest/modules/cloudformation_module.html
----
+# https://docs.ansible.com/ansible/latest/modules/cloudformation_info_module.html
+# https://docs.ansible.com/ansible/latest/user_guide/playbooks_delegation.html 
 
-- name: "Destroy AWS BIGIP Cluster"
+# Ansible Information
+- name: Set Ansible Information
   hosts: localhost
   gather_facts: False
   connection: local
+  vars:
+    stack_name: ""
+    #More variables below
 
-# Destroy AWS bigip cloudformation stack
+# Destroy AWS BIGIP Cluster stack
   tasks:
-    - name: Destroy AWS BIGIP Cluster
+    - name: Destroy AWS BIGIP cluster cloudformation stack
       cloudformation:
-        stack_name: ""
+        stack_name: "{{ stack_name }}"
         state: absent
 
-# Get summary information about a stack
+    - name: Get summary information about a stack
       cloudformation_info:
-        stack_name: ""
+        stack_name: "{{ stack_name }}"
       register: "BigipCloudformationOutput"
       
-# Output the stack information to ~/
-    - local_action: 
+    - name: Output the stack information to ~/
+      local_action: 
         copy content={{ BigipCloudformationOutput }} dest=~/ansible-bigip-cloudformation-output.txt
