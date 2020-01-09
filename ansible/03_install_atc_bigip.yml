@@ -13,7 +13,7 @@
 
 # Deploy 
   tasks:
-    - name: Deploy AS3 to BIG-IP
+#    - name: Deploy AS3 to BIG-IP
       set_fact:
         tmp_dir: "~/"
         f5_networks_github_base_url: "https://api.github.com/repos/F5Networks"
@@ -30,11 +30,11 @@
         ts_use_latest: false
         ts_requested_tag: "v1.6.0" # a default value that is used if not overidden and if ts_use_latest = false
 
-    - name: Set AS3 release url
+#    - name: Set AS3 release url
       set_fact:
         package_release_url: "{{ f5_networks_github_base_url }}/f5-appsvcs-extension/releases/{{ 'latest' if as3_use_latest == true else 'tags/' + as3_requested_tag }}"
 
-    - name: Get specific or latest AS3 version and checksum file download urls
+#    - name: Get specific or latest AS3 version and checksum file download urls
       uri:
         url: "{{ package_release_url }}"
         return_content: true
@@ -42,27 +42,27 @@
       register: as3_github_releases
       check_mode: false
 
-    - set_fact:
+#    - set_fact:
         # weird workaround below: https://github.com/ansible/ansible/issues/27299
         as3_release_url: "{{ as3_github_releases.json | to_json | from_json | json_query('assets[?ends_with(name, `.rpm`)] | [0] | browser_download_url') }}"
         as3_release_checksum_url: "{{ as3_github_releases.json | to_json | from_json | json_query('assets[?ends_with(name, `.sha256`)] | [0] | browser_download_url') }}"
 
-    - debug:
+#    - debug:
         var: as3_release_url
         verbosity: 2
 
-    - name: Download AS3 checksum file (sha256)
+#    - name: Download AS3 checksum file (sha256)
       get_url:
         url: "{{ as3_release_checksum_url }}"
         dest: "{{ tmp_dir }}/{{ as3_file_sha256 }}"
         force: true
       check_mode: false
 
-    - name: Set AS3 checksum var
+#    - name: Set AS3 checksum var
       set_fact:
         as3_checksum: "{{ lookup('file', '{{ tmp_dir }}/{{ as3_file_sha256 }}') | regex_search('^(\\S*)') }}"
 
-    - name: Download AS3 RPM file with check (sha256)
+#    - name: Download AS3 RPM file with check (sha256)
       get_url:
         url: "{{ as3_release_url }}"
         dest: "{{ tmp_dir }}/{{ as3_file }}"
