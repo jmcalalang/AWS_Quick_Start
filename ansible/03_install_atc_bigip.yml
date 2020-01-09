@@ -68,7 +68,8 @@
       force: true
     check_mode: false
 
-  - bigip_lx_package:
+  - name: Add an iAppLX Package for Application Services 3
+    bigip_iapplx_package:
       package: "{{ tmp_dir }}/{{ as3_file }}"
       provider: "{{ bigip_provider }}"
       state: present
