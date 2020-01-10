@@ -14,7 +14,7 @@
             "Application_1": {
                 "class": "Application",
                 "template": "generic",
-                "my_service_address": {
+                "{{ serviceName }}_service_address": {
                     "class": "Service_Address",
                     "virtualAddress": "{{ virtualAddresses }}",
                     "trafficGroup": "none"
@@ -22,7 +22,9 @@
                 "{{ serviceName }}": {
                     "class": "Service_Generic",
                     "virtualAddresses": [
-                        "{{ virtualAddresses }}"
+                        {
+                            "use": "{{ serviceName }}_service_address"
+                        }
                     ],
                     "virtualPort": 80,
                     "pool": "{{ serviceName }}_pl"
