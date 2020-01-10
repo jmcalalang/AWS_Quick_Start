@@ -47,7 +47,7 @@
         bigip1_auth_token: "{{ bigip1_auth_response.json.token.token }}"
 
     - name: Prepare the DO declaration
-      template: src="~/f5-rs-aws/templates/declarative-onboarding.template" dest="~/f5-rs-aws/templates/{{ deviceName }}_declaration.j2"
+      template: src="~/AWS_Quick_Start/templates/declarative-onboarding.template" dest="~/AWS_Quick_Start/templates/{{ deviceName }}_declaration.j2"
       delegate_to: localhost
 
     - name: Validate {{ deviceName }} DO Rest Worker is ready
@@ -64,7 +64,7 @@
 
     - name: Create or update {{ deviceName }}; DO Declaration
       uri:
-        body: "{{ lookup('file','~/f5-rs-aws/templates/' + '{{ deviceName }}_declaration.j2') }}"
+        body: "{{ lookup('file','~/AWS_Quick_Start/templates/' + '{{ deviceName }}_declaration.j2') }}"
         body_format: json
         headers:
           X-F5-Auth-Token: "{{ bigip1_auth_token }}"

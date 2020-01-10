@@ -22,7 +22,7 @@
         state: present
         region: us-west-2
         disable_rollback: false
-        template: "~/f5-rs-aws/templates/f5-network-only-2AZ-for-3nic-bigip.template"
+        template: "~/AWS_Quick_Start/templates/f5-network-only-2AZ-for-3nic-bigip.template"
         template_parameters:
           allowUsageAnalytics: "Yes"
           application: "f5app"

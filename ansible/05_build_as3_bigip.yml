@@ -53,7 +53,7 @@
         bigip1_auth_token: "{{ bigip1_auth_response.json.token.token }}"
 
     - name: Prepare the AS3 declaration
-      template: src="~/f5-rs-aws/templates/application-services-3.template" dest="~/f5-rs-aws/templates/{{ serviceName }}_declaration.j2"
+      template: src="~/AWS_Quick_Start/templates/application-services-3.template" dest="~/AWS_Quick_Start/templates/{{ serviceName }}_declaration.j2"
       delegate_to: localhost
 
     - name: Validate {{ deviceName }} AS3 Rest Worker is ready
@@ -70,7 +70,7 @@
 
     - name: Create or update {{ serviceName }}; AS3 Declaration
       uri:
-        body: "{{ lookup('file','~/f5-rs-aws/templates/' + '{{ serviceName }}_declaration.j2') }}"
+        body: "{{ lookup('file','~/AWS_Quick_Start/templates/' + '{{ serviceName }}_declaration.j2') }}"
         body_format: json
         headers:
           X-F5-Auth-Token: "{{ bigip1_auth_token }}"
