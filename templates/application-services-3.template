@@ -4,7 +4,7 @@
     "persist": true,
     "declaration": {
         "class": "ADC",
-        "schemaVersion": "3.16.0",
+        "schemaVersion": "3.14.0",
         "id": "{{ serviceName }}-id",
         "label": "{{ serviceName }}-label",
         "remark": "Simple HTTP application with round robin pool",

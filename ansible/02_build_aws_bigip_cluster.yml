@@ -22,24 +22,17 @@
         state: present
         region: us-west-2
         disable_rollback: false
-        template: "~/f5-rs-aws/templates/f5-existing-stack-same-az-cluster-payg-3nic-bigip.template"
+        template_url: "https://f5-cft.s3.amazonaws.com/f5-existing-stack-same-az-cluster-payg-3nic-bigip.template"
         template_parameters:
           sshKey: ""
           restrictedSrcAddress: ""
           restrictedSrcAddressApp: ""
           Vpc: ""
           managementSubnetAz1: ""
-          managementSubnetAz2: ""
           subnet1Az1: ""
-          subnet1Az2: ""
           subnet2Az1: ""
-          subnet2Az2: ""
-          availabilityZone1: ""
-          availabilityZone2: ""
-          numberOfAdditionalNics: ""
-          additionalNicLocation: ""
-          provisionPublicIP: "yes"
-          imageName: "AllTwoBootLocations"
+          provisionPublicIP: "Yes"
+          imageName: "Best1000Mbps"
           customImageId: "OPTIONAL"
           instanceType: "m5.xlarge"
           ntpServer: "0.pool.ntp.org"
@@ -52,6 +45,7 @@
           costcenter: "f5costcenter"
           allowUsageAnalytics: "Yes"
           declarationUrl: "none"
+
         tags:
           Stack: ansible-cloudformations
 
