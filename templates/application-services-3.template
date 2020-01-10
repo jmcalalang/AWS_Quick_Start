@@ -13,12 +13,18 @@
             "defaultRouteDomain": 0,
             "Application_1": {
                 "class": "Application",
-                "template": "http",
-                "serviceMain": {
-                    "class": "Service_HTTP",
+                "template": "generic",
+                "my_service_address": {
+                    "class": "Service_Address",
+                    "virtualAddress": "{{ virtualAddresses }}",
+                    "trafficGroup": "none"
+                },
+                "{{ serviceName }}": {
+                    "class": "Service_Generic",
                     "virtualAddresses": [
                         "{{ virtualAddresses }}"
                     ],
+                    "virtualPort": 80,
                     "pool": "{{ serviceName }}_pl"
                 },
                 "{{ serviceName }}_pl": {
