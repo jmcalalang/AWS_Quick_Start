@@ -24,7 +24,7 @@
     tagKey: ""
     tagValue: ""
 
-# Deploy 
+# Deploy AS3 Declarations
   tasks:
     - name: Wait a maximum of 300 seconds for BIG-IP to be ready to take configuration
       bigip_wait:

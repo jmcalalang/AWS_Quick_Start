@@ -17,21 +17,9 @@
     BIGIPadminUsername: ""
     BIGIPadminPassword: ""
     deviceName1: ""
-    serviceName: ""
-    virtualAddresses: ""
-    accessKeyId: ""
-    secretAccessKey: ""
-    tagKey: ""
-    tagValue: ""
 
-# Deploy 
+# Deploy DO Declarations
   tasks:
-    - name: Deploy DO to BIG-IP
-      set_fact:
-        BIGIPadminUsername: ""
-        BIGIPadminPassword: ""
-        deviceName1: ""
-
     - name: Wait a maximum of 300 seconds for BIG-IP to be ready to take configuration
       bigip_wait:
         timeout: 300
@@ -59,7 +47,8 @@
         bigip1_auth_token: "{{ bigip1_auth_response.json.token.token }}"
 
     - name: Prepare the DO declaration
-      template: src="~/f5-rs-aws/templates/declarative-onboarding.template" dest="~/f5-rs-aws/templates/{{ serviceName }}_declaration.j2"
+      template: src="~/f5-rs-aws/templates/declarative-onboarding.template" dest="~/f5-rs-aws/templates/{{ deviceName1 }}_declaration.j2"
+      delegate_to: localhost
 
     - name: Validate {{ deviceName1 }} DO Rest Worker is ready
       uri:
@@ -73,15 +62,15 @@
       register: result
       until: "(result is successful) and (result.status == 200)"
 
-    - name: Create or update {{ serviceName }}; DO Declaration
+    - name: Create or update {{ deviceName1 }}; DO Declaration
       uri:
-        body: "{{ lookup('file','~/f5-rs-aws/templates' + '{{ serviceName }}_declaration.j2') }}"
+        body: "{{ lookup('file','~/f5-rs-aws/templates/' + '{{ deviceName1 }}_declaration.j2') }}"
         body_format: json
         headers:
           X-F5-Auth-Token: "{{ bigip1_auth_token }}"
         method: POST
-        status_code: "200"
-        url: "https://{{ deviceName1 }}/mgmt/shared/appsvcs/declare"
+        status_code: "202"
+        url: "https://{{ deviceName1 }}/mgmt/shared/declarative-onboarding"
         validate_certs: no
         timeout: "60"
 
