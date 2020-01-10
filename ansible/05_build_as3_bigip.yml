@@ -16,7 +16,7 @@
   vars:
     BIGIPadminUsername: ""
     BIGIPadminPassword: ""
-    deviceName1: ""
+    deviceName: ""
     serviceName: ""
     virtualAddresses: ""
     accessKeyId: ""
@@ -24,23 +24,23 @@
     tagKey: ""
     tagValue: ""
 
-# Deploy AS3 Declarations
+# Deploy 
   tasks:
     - name: Wait a maximum of 300 seconds for BIG-IP to be ready to take configuration
       bigip_wait:
         timeout: 300
         provider:
           password: "{{ BIGIPadminPassword }}"
-          server: "{{ deviceName1 }}"
+          server: "{{ deviceName }}"
           user: "{{ BIGIPadminUsername }}"
           validate_certs: no
 
-    - name: Get BIG-IP Authentication Token from {{ deviceName1 }}
+    - name: Get BIG-IP Authentication Token from {{ deviceName }}
       uri:
         body: '{"username":"{{ BIGIPadminUsername }}","password":"{{ BIGIPadminPassword }}","loginProviderName":"tmos"}'
         body_format: json
         method: POST
-        url: "https://{{ deviceName1 }}/mgmt/shared/authn/login"
+        url: "https://{{ deviceName }}/mgmt/shared/authn/login"
         status_code: "200"
         validate_certs: no
       register: bigip1_auth_response
@@ -56,12 +56,12 @@
       template: src="~/f5-rs-aws/templates/application-services-3.template" dest="~/f5-rs-aws/templates/{{ serviceName }}_declaration.j2"
       delegate_to: localhost
 
-    - name: Validate {{ deviceName1 }} AS3 Rest Worker is ready
+    - name: Validate {{ deviceName }} AS3 Rest Worker is ready
       uri:
         headers:
           X-F5-Auth-Token: "{{ bigip1_auth_token }}"
         method: GET
-        url: "https://{{ deviceName1 }}/mgmt/shared/appsvcs/available"
+        url: "https://{{ deviceName }}/mgmt/shared/appsvcs/available"
         validate_certs: no
       retries: 30
       delay: 5
@@ -76,16 +76,16 @@
           X-F5-Auth-Token: "{{ bigip1_auth_token }}"
         method: POST
         status_code: "200"
-        url: "https://{{ deviceName1 }}/mgmt/shared/appsvcs/declare"
+        url: "https://{{ deviceName }}/mgmt/shared/appsvcs/declare"
         validate_certs: no
         timeout: "60"
 
-    - name: Delete BIG-IP Authentication Token from {{deviceName1}}
+    - name: Delete BIG-IP Authentication Token from {{deviceName}}
       uri:
         headers:
           X-F5-Auth-Token: "{{ bigip1_auth_token }}"
         method: DELETE
-        url: "https://{{ deviceName1 }}/mgmt/shared/authz/tokens/{{ bigip1_auth_token }}"
+        url: "https://{{ deviceName }}/mgmt/shared/authz/tokens/{{ bigip1_auth_token }}"
         status_code: "200"
         validate_certs: no
       register: bigip1_token_delete

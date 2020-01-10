@@ -16,7 +16,7 @@
   vars:
     BIGIPadminUsername: ""
     BIGIPadminPassword: ""
-    deviceName1: ""
+    deviceName: ""
 
 # Deploy DO Declarations
   tasks:
@@ -25,16 +25,16 @@
         timeout: 300
         provider:
           password: "{{ BIGIPadminPassword }}"
-          server: "{{ deviceName1 }}"
+          server: "{{ deviceName }}"
           user: "{{ BIGIPadminUsername }}"
           validate_certs: no
 
-    - name: Get BIG-IP Authentication Token from {{ deviceName1 }}
+    - name: Get BIG-IP Authentication Token from {{ deviceName }}
       uri:
         body: '{"username":"{{ BIGIPadminUsername }}","password":"{{ BIGIPadminPassword }}","loginProviderName":"tmos"}'
         body_format: json
         method: POST
-        url: "https://{{ deviceName1 }}/mgmt/shared/authn/login"
+        url: "https://{{ deviceName }}/mgmt/shared/authn/login"
         status_code: "200"
         validate_certs: no
       register: bigip1_auth_response
@@ -47,39 +47,39 @@
         bigip1_auth_token: "{{ bigip1_auth_response.json.token.token }}"
 
     - name: Prepare the DO declaration
-      template: src="~/f5-rs-aws/templates/declarative-onboarding.template" dest="~/f5-rs-aws/templates/{{ deviceName1 }}_declaration.j2"
+      template: src="~/f5-rs-aws/templates/declarative-onboarding.template" dest="~/f5-rs-aws/templates/{{ deviceName }}_declaration.j2"
       delegate_to: localhost
 
-    - name: Validate {{ deviceName1 }} DO Rest Worker is ready
+    - name: Validate {{ deviceName }} DO Rest Worker is ready
       uri:
         headers:
           X-F5-Auth-Token: "{{ bigip1_auth_token }}"
         method: GET
-        url: "https://{{ deviceName1 }}/mgmt/shared/declarative-onboarding/available"
+        url: "https://{{ deviceName }}/mgmt/shared/declarative-onboarding/available"
         validate_certs: no
       retries: 30
       delay: 5
       register: result
       until: "(result is successful) and (result.status == 200)"
 
-    - name: Create or update {{ deviceName1 }}; DO Declaration
+    - name: Create or update {{ deviceName }}; DO Declaration
       uri:
-        body: "{{ lookup('file','~/f5-rs-aws/templates/' + '{{ deviceName1 }}_declaration.j2') }}"
+        body: "{{ lookup('file','~/f5-rs-aws/templates/' + '{{ deviceName }}_declaration.j2') }}"
         body_format: json
         headers:
           X-F5-Auth-Token: "{{ bigip1_auth_token }}"
         method: POST
         status_code: "202"
-        url: "https://{{ deviceName1 }}/mgmt/shared/declarative-onboarding"
+        url: "https://{{ deviceName }}/mgmt/shared/declarative-onboarding"
         validate_certs: no
         timeout: "60"
 
-    - name: Delete BIG-IP Authentication Token from {{deviceName1}}
+    - name: Delete BIG-IP Authentication Token from {{deviceName}}
       uri:
         headers:
           X-F5-Auth-Token: "{{ bigip1_auth_token }}"
         method: DELETE
-        url: "https://{{ deviceName1 }}/mgmt/shared/authz/tokens/{{ bigip1_auth_token }}"
+        url: "https://{{ deviceName }}/mgmt/shared/authz/tokens/{{ bigip1_auth_token }}"
         status_code: "200"
         validate_certs: no
       register: bigip1_token_delete
