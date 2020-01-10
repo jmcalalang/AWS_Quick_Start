@@ -12,7 +12,6 @@
   connection: local
   vars:
     stack_name: ""
-    #More variables below
 
 # Destroy AWS infrastruture cloudformation stack
   tasks:
@@ -24,8 +23,8 @@
     - name: Get summary information about a stack     
       cloudformation_info:
         stack_name: "{{ stack_name }}"
-      register: "InfrastructureCloudformationOutput"
+      register: "DeleteCloudformationOutput"
 
     - name: Output the stack information to ~/
       local_action: 
-        copy content={{ InfrastructureCloudformationOutput }} dest=~/ansible-infrastructure-cloudformation-output.txt 
+        copy content={{ DeleteCloudformationOutput }} dest=~/ansible-delete-cloudformation-output.txt 
